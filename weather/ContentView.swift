@@ -1,61 +1,213 @@
-//
-//  ContentView.swift
-//  weather
-//
-//  Created by 노가현 on 1/6/24.
-//
-
 import SwiftUI
-import SwiftData
 
 struct ContentView: View {
-    @Environment(\.modelContext) private var modelContext
-    @Query private var items: [Item]
+    
+    @State var offset: CGFloat = 0
 
     var body: some View {
-        NavigationSplitView {
-            List {
-                ForEach(items) { item in
-                    NavigationLink {
-                        Text("Item at \(item.timestamp, format: Date.FormatStyle(date: .numeric, time: .standard))")
-                    } label: {
-                        Text(item.timestamp, format: Date.FormatStyle(date: .numeric, time: .standard))
+        ZStack {
+            GeometryReader { geomerty  in
+                Image("cloud")
+                    .resizable()
+                    .scaledToFill()
+                    .edgesIgnoringSafeArea(/*@START_MENU_TOKEN@*/.all/*@END_MENU_TOKEN@*/)
+            }
+            .ignoresSafeArea()
+        
+            ScrollView {
+                VStack {
+                    if offset >= 50 {
+                        Text("부산광역시")
+                            .font(.title)
+                    } else {
+                        VStack {
+                            Text("부산광역시")
+                                .font(.title)
+                            HStack {
+                                Text("8°")
+                                    .font(.title3)
+                                Text("맑음")
+                                    .font(.title3)
+                            }
+                        }
+                    }
+
+                    Text("8°")
+                        .font(.system(size: 80, weight:.thin))
+                        .opacity(setOpacity())
+                    Text("맑음")
+                        .font(.title3)
+                        .opacity(setOpacity())
+                    HStack {
+                        Text("최고:9°")
+                            .font(.title3)
+                            .opacity(setOpacity())
+                        Text("최저:-1°")
+                            .font(.title3)
+                            .opacity(setOpacity())
                     }
                 }
-                .onDelete(perform: deleteItems)
-            }
-            .toolbar {
-                ToolbarItem(placement: .navigationBarTrailing) {
-                    EditButton()
+                .offset(y: -offset + 70)
+                .background(
+                    GeometryReader(content: { geometry -> Color in
+                        let minY = geometry.frame(in: .global).minY
+                        
+                        DispatchQueue.main.async {
+                            offset = minY
+                        }
+                        
+                        return Color.clear
+                    })
+                )
+                
+                BlurStackView {
+                    Text("남은 하루 동안 맑은 상태가 이어지겠습니다. 돌풍의 풍속은 최대 6m/s입니다.")
+                } contentView: {
+                    ScrollView(.horizontal, showsIndicators: false) {
+                        HStack(spacing: 35) {
+                            ForecaseView(time: "지금", imageName: "cloud.sun", celcius: 8)
+                            ForecaseView(time: "오후2시", imageName: "cloud.sun", celcius: 9)
+                            ForecaseView(time: "오후3시", imageName: "cloud.sun", celcius: 9)
+                            ForecaseView(time: "오후4시", imageName: "cloud.sun", celcius: 9)
+                            ForecaseView(time: "오후5시", imageName: "cloud.sun", celcius: 7)
+                            ForecaseView(time: "오후6시", imageName: "moon", celcius: 5)
+                        }
+                    }
+//                    HStack {
+//                        VStack {
+//                            Text("지금")
+//                            Image(systemName: "cloud.fill")
+//                            Text("8°")
+//                        }
+//                        VStack {
+//                            Text("오후 3시")
+//                            Image(systemName: "cloud.fill")
+//                            Text("8°")
+//                        }
+//                        VStack {
+//                            Text("오후 4시")
+//                            Image(systemName: "cloud.fill")
+//                            Text("8°")
+//                        }
+//                        VStack {
+//                            Text("오후 5시")
+//                            Image(systemName: "cloud.fill")
+//                            Text("7°")
+//                        }
+//                    }
                 }
-                ToolbarItem {
-                    Button(action: addItem) {
-                        Label("Add Item", systemImage: "plus")
+
+                BlurStackView {
+                    HStack {
+                        Image(systemName: "calendar")
+                        Text("10일간의 일기예보")
+                    }
+                } contentView: {
+                    VStack {
+                        HStack {
+                            Text("오늘")
+                            Image(systemName: "cloud.fill")
+                            Text("0°")
+                        }
+                        HStack {
+                            Text("오늘")
+                            Image(systemName: "cloud.fill")
+                            Text("0°")
+                        }
+                        HStack {
+                            Text("오늘")
+                            Image(systemName: "cloud.fill")
+                            Text("0°")
+                        }
+                    }
+                }
+                BlurStackView {
+                    HStack {
+                        Image(systemName: "calendar")
+                        Text("10일간의 일기예보")
+                    }
+                } contentView: {
+                    VStack {
+                        HStack {
+                            Text("오늘")
+                            Image(systemName: "cloud.fill")
+                            Text("0°")
+                        }
+                        HStack {
+                            Text("오늘")
+                            Image(systemName: "cloud.fill")
+                            Text("0°")
+                        }
+                        HStack {
+                            Text("오늘")
+                            Image(systemName: "cloud.fill")
+                            Text("0°")
+                        }
+                    }
+                }
+                BlurStackView {
+                    HStack {
+                        Image(systemName: "calendar")
+                        Text("10일간의 일기예보")
+                    }
+                } contentView: {
+                    VStack {
+                        HStack {
+                            Text("오늘")
+                            Image(systemName: "cloud.fill")
+                            Text("0°")
+                        }
+                        HStack {
+                            Text("오늘")
+                            Image(systemName: "cloud.fill")
+                            Text("0°")
+                        }
+                        HStack {
+                            Text("오늘")
+                            Image(systemName: "cloud.fill")
+                            Text("0°")
+                        }
+                    }
+                }
+                BlurStackView {
+                    HStack {
+                        Image(systemName: "calendar")
+                        Text("10일간의 일기예보")
+                    }
+                } contentView: {
+                    VStack {
+                        HStack {
+                            Text("오늘")
+                            Image(systemName: "cloud.fill")
+                            Text("0°")
+                        }
+                        HStack {
+                            Text("오늘")
+                            Image(systemName: "cloud.fill")
+                            Text("0°")
+                        }
+                        HStack {
+                            Text("오늘")
+                            Image(systemName: "cloud.fill")
+                            Text("0°")
+                        }
                     }
                 }
             }
-        } detail: {
-            Text("Select an item")
         }
     }
-
-    private func addItem() {
-        withAnimation {
-            let newItem = Item(timestamp: Date())
-            modelContext.insert(newItem)
-        }
-    }
-
-    private func deleteItems(offsets: IndexSet) {
-        withAnimation {
-            for index in offsets {
-                modelContext.delete(items[index])
-            }
+    
+    func setOpacity() -> CGFloat {
+        if offset < 70 {
+            return offset/70
+        } else {
+            return 1
         }
     }
 }
 
-#Preview {
-    ContentView()
-        .modelContainer(for: Item.self, inMemory: true)
+struct ContentView_Previews: PreviewProvider {
+    static var previews: some View {
+        ContentView()
+    }
 }
